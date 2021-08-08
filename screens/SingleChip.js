@@ -1,17 +1,31 @@
 import React, { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { onRemove, onSelect } from '../slices/chipSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-
-const SingleChip = (props) => {
-
+const SingleChip = ({ title }) => {
+    const dispatch = useDispatch()
+    const state = useSelector(state => state.chip)
     const [active, setActive] = useState(false)
 
+    const conditionalButton =
+
+        active ?
+            <Pressable
+                onPress={() => { setActive(false); dispatch(onRemove(title)) }}
+                style={styles.buttonActive}
+            >
+                <Text style={styles.text}>{title}</Text>
+            </Pressable >
+            :
+            <Pressable
+                onPress={() => { setActive(true); dispatch(onSelect(title)) }}
+                style={styles.buttonInactive}
+            >
+                <Text style={styles.text}>{title}</Text>
+            </Pressable >
     return (
-        <Pressable
-            style={active ? styles.buttonActive : styles.buttonInactive}
-            onPress={() => { setActive(!active); props.clickHandler }}>
-            <Text style={styles.text}>{props.title}</Text>
-        </Pressable >
+        conditionalButton
     )
 }
 
@@ -44,7 +58,7 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        fontSize: 12,
+        fontSize: 11,
         lineHeight: 20,
         fontWeight: 'bold',
         letterSpacing: 0.25,
